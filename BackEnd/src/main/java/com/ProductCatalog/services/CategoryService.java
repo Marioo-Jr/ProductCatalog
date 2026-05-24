@@ -1,7 +1,7 @@
 package com.ProductCatalog.services;
 
 import java.util.List;
-import java.util.stream.Collector;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ProductCatalog.DTO.CategoryDTO;
 import com.ProductCatalog.entities.Category;
 import com.ProductCatalog.repositories.CategoryRepository;
+import com.ProductCatalog.services.exceptions.EntityNotFoundException;
+
 
 
 
@@ -28,6 +30,17 @@ public class CategoryService {
        return list.stream().map(x -> new CategoryDTO(x)).collect(Collectors.toList());
     
     }
+
+
+    @Transactional
+    public CategoryDTO findById (Long id){
+
+        Optional<Category> obj = repository.findById(id);
+        Category entity = obj.orElseThrow(() -> new EntityNotFoundException("Entity not found"));
+        return new CategoryDTO(entity);
+
+    }
+
 
 
 }
